@@ -37,7 +37,6 @@ if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.custo
     params['CHANNEL_ID'] = 'WEB';
     params['INDUSTRY_TYPE_ID'] = 'Retail';
     params['ORDER_ID'] = 'TEST_'  + new Date().getTime();
-    params['CUST_ID'] = paymentDetails.customerId;
     params['TXN_AMOUNT'] = paymentDetails.amount;
     params['CALLBACK_URL'] = 'https://netflixpaytm.herokuapp.com/callback';
     params['EMAIL'] = paymentDetails.customerEmail;
@@ -118,7 +117,7 @@ app.post("/callback", (req, res) => {
             var _results = JSON.parse(response);
             /* where it will come back after payment*/
             res.redirect(
-            `https://netflixpaytm.netlify.app/viewPremium?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`
+            `https://netflixpaytm.netlify.app/home`
             );
             });
         });
