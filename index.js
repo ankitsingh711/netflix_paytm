@@ -11,7 +11,7 @@ const app = express();
 const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
 
-const PORT = process.env.PORT || 6100;
+const PORT = process.env.PORT || 7100;
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
@@ -23,7 +23,7 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
 
     var paymentDetails = {
     amount: req.body.amount,
-    customerId: req.body.name,
+    customerId: req.body.name.replace(/\s/g,''),
     customerEmail: req.body.email,
     customerPhone: req.body.phone,
     customerRest: req.body.rest_name
@@ -39,7 +39,7 @@ if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.custo
     params['ORDER_ID'] = 'TEST_'  + new Date().getTime();
     params['CUST_ID'] = paymentDetails.customerId;
     params['TXN_AMOUNT'] = paymentDetails.amount;
-    params['CALLBACK_URL'] = 'https://netflixpaytm.herokuapp.com/callback';
+    params['CALLBACK_URL'] = 'http://localhost:3000/callback';
     params['EMAIL'] = paymentDetails.customerEmail;
     params['MOBILE_NO'] = paymentDetails.customerPhone;
 
@@ -118,7 +118,7 @@ app.post("/callback", (req, res) => {
             var _results = JSON.parse(response);
             /* where it will come back after payment*/
             res.redirect(
-            `https://netflixpaytm.netlify.app/viewPremium?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`
+            `http://localhost:3000/viewBooking?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`
             );
             });
         });
